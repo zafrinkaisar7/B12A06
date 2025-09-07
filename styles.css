@@ -1,4 +1,3 @@
-/* Custom Styles */
 body {
   font-family: Arial, sans-serif;
 }
@@ -13,4 +12,14 @@ body {
 /* Spinner */
 #spinner .animate-spin {
   border-top-color: transparent;
+}
+
+/* Hero Leaf Images */
+.hero-leaf-left,
+.hero-leaf-right {
+  max-width: 180px;
+  height: auto;
+}
+.hero-leaf-left {
+  margin-right: 10px;
 }
