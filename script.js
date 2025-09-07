@@ -124,14 +124,14 @@ async function loadTreesByCategory(id) {
   }
 }
 
-// Ensure all tree cards have the same height
+// Equalize Heights of All Tree Cards
 function equalizeCardHeights() {
   const cards = document.querySelectorAll(".tree-card");
   let maxHeight = 0;
 
   // Reset heights to calculate the tallest card
   cards.forEach(card => {
-    card.style.height = "auto";
+    card.style.height = "auto"; // Reset height
     maxHeight = Math.max(maxHeight, card.offsetHeight);
   });
 
@@ -205,6 +205,41 @@ function updateCart() {
     cartList.appendChild(li);
   });
   totalPriceEl.textContent = total + "৳";
+}
+
+// Open Modal with Tree Details
+async function loadTreeDetails(treeId) {
+  console.log("Tree ID:", treeId); // Debugging
+  const modal = document.getElementById("treeModal");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalImage = document.getElementById("modalImage");
+  const modalDescription = document.getElementById("modalDescription");
+  const modalCategory = document.getElementById("modalCategory");
+  const modalPrice = document.getElementById("modalPrice");
+
+  try {
+    // Fetch tree details from the API
+    const res = await fetch(`https://openapi.programming-hero.com/api/plant/${treeId}`);
+    const tree = await res.json();
+
+    // Populate modal with tree details
+    modalTitle.innerText = tree.data.name;
+    modalImage.src = tree.data.image;
+    modalDescription.innerText = tree.data.description || "No description available.";
+    modalCategory.innerText = `Category: ${tree.data.category}`;
+    modalPrice.innerText = `Price: ${tree.data.price}৳`;
+
+    // Show the modal
+    modal.classList.remove("hidden");
+  } catch (error) {
+    console.error("Failed to load tree details:", error);
+  }
+}
+
+// Close Modal
+function closeModal() {
+  const modal = document.getElementById("treeModal");
+  modal.classList.add("hidden");
 }
 
 // Init

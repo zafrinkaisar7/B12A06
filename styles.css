@@ -1,5 +1,6 @@
 body {
   font-family: Arial, sans-serif;
+  background-color: #bbf7d0; /* Set the background color to match the category background */
 }
 
 /* Category Buttons */
@@ -13,8 +14,8 @@ body {
   background: #dcfce7;
 }
 .category-btn.active {
-  background: #85d5a2;
-  color: white;
+  background-color: #facc15; /* Yellow background */
+  color: #000; /* Black text */
   font-weight: bold;
 }
 
@@ -59,10 +60,11 @@ body {
   text-align: center;
   margin: 0.25rem 0;
   min-height: 40px; /* Ensure consistent height for descriptions */
+  max-height: 40px; /* Limit the height of the description */
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-line-clamp: 1; /* Limit to 1 line */
   -webkit-box-orient: vertical;
 }
 
@@ -116,3 +118,114 @@ body {
   background: #eab308;
   cursor: pointer;
 }
+
+/* Our Impact Section */
+.bg-green-200 {
+  padding-top: 80px; /* Further increase top padding */
+  padding-bottom: 80px; /* Further increase bottom padding */
+}
+
+/* Our Impact Cards */
+.bg-white {
+  padding: 40px; /* Increase padding inside the cards */
+  min-height: 450px; /* Set a larger minimum height for the cards */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+}
+
+/* About Campaign Section */
+#about {
+  padding: 2.5rem 1.5rem; /* Match padding with Choose Your Trees section */
+}
+
+#about .grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Default to 1 column for small screens */
+  gap: 1.5rem; /* Add consistent spacing between items */
+}
+
+@media (min-width: 768px) {
+  #about .grid {
+    grid-template-columns: 2fr 3fr; /* Match Choose Your Trees layout */
+  }
+}
+
+@media (min-width: 1024px) {
+  #about .grid {
+    grid-template-columns: 2fr 3fr; /* Match Choose Your Trees layout */
+  }
+}
+
+/* About Campaign Content */
+#about img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+#about h2 {
+  font-size: 1.875rem; /* Match font size with Choose Your Trees title */
+  color: #064e3b; /* Consistent green color */
+  margin-bottom: 1rem;
+}
+
+#about p {
+  font-size: 1rem;
+  color: #4b5563; /* Tailwind gray-600 */
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+#about ul {
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+#about button {
+  background-color: #16a34a; /* Tailwind green-600 */
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+#about button:hover {
+  background-color: #15803d; /* Darker green on hover */
+}
+
+/* Modal */
+#treeModal {
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#treeModal.hidden {
+  display: none;
+}
+
+#treeModal .bg-black {
+  z-index: 40;
+}
+
+#treeModal .bg-white {
+  z-index: 50;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
