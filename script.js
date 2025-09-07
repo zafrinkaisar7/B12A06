@@ -7,6 +7,21 @@ const spinner = document.getElementById("spinner");
 let cart = [];
 let total = 0;
 
+// fallback categories
+const treeCategories = [
+  { id: "all", name: "All Trees" },
+  { id: "fruit", name: "Fruit Trees" },
+  { id: "flowering", name: "Flowering Trees" },
+  { id: "shade", name: "Shade Trees" },
+  { id: "medicinal", name: "Medicinal Trees" },
+  { id: "timber", name: "Timber Trees" },
+  { id: "evergreen", name: "Evergreen Trees" },
+  { id: "ornamental", name: "Ornamental Plants" },
+  { id: "bamboo", name: "Bamboo" },
+  { id: "climbers", name: "Climbers" },
+  { id: "aquatic", name: "Aquatic Plants" },
+];
+
 // Show/Hide Spinner
 const showSpinner = () => spinner.classList.remove("hidden");
 const hideSpinner = () => spinner.classList.add("hidden");
@@ -14,10 +29,28 @@ const hideSpinner = () => spinner.classList.add("hidden");
 // Load Categories
 async function loadCategories() {
   showSpinner();
-  const res = await fetch("https://openapi.programming-hero.com/api/categories");
-  const data = await res.json();
-  hideSpinner();
-  displayCategories(data.categories);
+  try {
+    const res = await fetch("https://openapi.programming-hero.com/api/categories");
+    const data = await res.json();
+
+    console.log("API Categories:", data);
+
+    let categories = [];
+    if (data.data && Array.isArray(data.data)) {
+      categories = data.data.map((c, i) => ({
+        id: c.category || c.id || i + 1,
+        name: c.category || c.name || `Category ${i + 1}`
+      }));
+    }
+    if (!categories.length) categories = treeCategories;
+
+    displayCategories(categories);
+  } catch (err) {
+    console.error("Category API failed:", err);
+    displayCategories(treeCategories);
+  } finally {
+    hideSpinner();
+  }
 }
 
 // Display Categories
@@ -25,61 +58,96 @@ function displayCategories(categories) {
   categoriesDiv.innerHTML = "";
   categories.forEach(cat => {
     const btn = document.createElement("button");
-    btn.innerText = cat.category;
-    btn.className = "category-btn bg-green-200 px-4 py-2 rounded hover:bg-green-300";
-    btn.onclick = () => loadTreesByCategory(cat.id, btn);
+    btn.innerText = cat.name;
+    btn.className = "category-btn bg-green-200 px-3 py-2 rounded";
+    btn.onclick = () => {
+      document.querySelectorAll(".category-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      loadTreesByCategory(cat.id);
+    };
     categoriesDiv.appendChild(btn);
   });
 }
 
-// Load Trees
+// Load All Trees
 async function loadTrees() {
   showSpinner();
-  const res = await fetch("https://openapi.programming-hero.com/api/plants");
-  const data = await res.json();
-  hideSpinner();
-  displayTrees(data.plants);
+  try {
+    const res = await fetch("https://openapi.programming-hero.com/api/plants");
+    const data = await res.json();
+    displayTrees(data.plants || []);
+  } catch (err) {
+    console.error("Error loading all trees:", err);
+    displayTrees([]); // no crash
+  } finally {
+    hideSpinner();
+  }
 }
 
-// Load Trees by Category
-async function loadTreesByCategory(id, btn) {
-  document.querySelectorAll(".category-btn").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
+// ✅ Fixed Load Trees by Category
+async function loadTreesByCategory(id) {
+  if (id === "all") {
+    loadTrees();
+    return;
+  }
 
   showSpinner();
-  const res = await fetch(`https://openapi.programming-hero.com/api/category/${id}`);
-  const data = await res.json();
-  hideSpinner();
-  displayTrees(data.data);
+  try {
+    // 1. Try API endpoint for category
+    const res = await fetch(`https://openapi.programming-hero.com/api/trees/category/${id}`);
+    const data = await res.json();
+
+    if (data.data && data.data.length) {
+      displayTrees(data.data);
+    } else {
+      // 2. Fallback: client-side filtering
+      const res2 = await fetch("https://openapi.programming-hero.com/api/plants");
+      const all = await res2.json();
+
+      const filtered = (all.plants || []).filter(t => {
+        if (!t.category) return false;
+
+        // normalize both sides (lowercase + remove spaces)
+        const normalizedTreeCat = t.category.toLowerCase().replace(/\s+/g, "");
+        const normalizedId = id.toLowerCase().replace(/\s+/g, "");
+
+        return normalizedTreeCat.includes(normalizedId);
+      });
+
+      displayTrees(filtered);
+    }
+  } catch (err) {
+    console.error("Category trees failed:", err);
+    displayTrees([]);
+  } finally {
+    hideSpinner();
+  }
 }
 
 // Display Trees
 function displayTrees(trees) {
   treesDiv.innerHTML = "";
+  if (!trees.length) {
+    treesDiv.innerHTML = `<p class="text-center text-gray-500">No trees available</p>`;
+    return;
+  }
+
   trees.forEach(tree => {
     const card = document.createElement("div");
     card.className = "bg-white shadow rounded p-4 text-center";
     card.innerHTML = `
-      <img src="${tree.image}" alt="${tree.name}" class="w-full h-40 object-cover rounded mb-2">
-      <h3 class="font-bold cursor-pointer hover:text-green-600" onclick="loadTreeDetails(${tree.id})">${tree.name}</h3>
-      <p class="text-gray-600 text-sm">${tree.category}</p>
-      <p class="font-semibold">${tree.price}৳</p>
+      <img src="${tree.image || "https://via.placeholder.com/150"}" alt="${tree.name}" 
+           class="w-full h-32 object-cover rounded mb-2">
+      <h3 class="font-bold">${tree.name || "Unnamed"}</h3>
+      <p class="text-gray-600">${tree.category || "Unknown"}</p>
+      <p class="font-semibold">${tree.price ? tree.price + "৳" : "Price N/A"}</p>
       <button class="mt-2 bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700"
-        onclick="addToCart('${tree.name}', ${tree.price})">
+        onclick="addToCart('${tree.name}', ${tree.price || 0})">
         Add to Cart
       </button>
     `;
     treesDiv.appendChild(card);
   });
-}
-
-// Load Tree Details (Modal)
-async function loadTreeDetails(id) {
-  showSpinner();
-  const res = await fetch(`https://openapi.programming-hero.com/api/plant/${id}`);
-  const data = await res.json();
-  hideSpinner();
-  alert(`${data.name}\n\n${data.description}`);
 }
 
 // Add to Cart
