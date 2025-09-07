@@ -1,12 +1,19 @@
-/* Custom CSS */
+/* Custom Styles */
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, sans-serif;
 }
 
-button {
-  transition: all 0.3s ease-in-out;
+/* Active Category Button */
+.category-btn.active {
+  background-color: #facc15;
+  color: #000;
+  font-weight: bold;
 }
 
-button:hover {
-  transform: scale(1.05);
+/* Spinner */
+#spinner .animate-spin {
+  border-top-color: transparent;
+}
+#spinner .text-gray-200 {
+  color: #e5e7eb;
 }

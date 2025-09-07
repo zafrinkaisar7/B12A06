@@ -1,150 +1,116 @@
-// 🌴 API Endpoints
-const apiBase = "https://openapi.programming-hero.com/api";
-const categoriesUrl = `${apiBase}/categories`;
-const plantsUrl = `${apiBase}/plants`;
-const plantsByCategoryUrl = `${apiBase}/category/`;
-const plantDetailUrl = `${apiBase}/plant/`;
-
-// DOM elements
-const categoriesContainer = document.getElementById("categories");
-const treesContainer = document.getElementById("trees");
-const cartContainer = document.getElementById("cart");
+const categoriesDiv = document.getElementById("categories");
+const treesDiv = document.getElementById("trees");
+const cartList = document.getElementById("cart");
 const totalPriceEl = document.getElementById("totalPrice");
 const spinner = document.getElementById("spinner");
 
-// cart data
 let cart = [];
-let totalPrice = 0;
+let total = 0;
 
-// 🌴 Loading Spinner
-function toggleSpinner(show) {
-  spinner.style.display = show ? "block" : "none";
+// Show/Hide Spinner
+const showSpinner = () => spinner.classList.remove("hidden");
+const hideSpinner = () => spinner.classList.add("hidden");
+
+// Load Categories
+async function loadCategories() {
+  showSpinner();
+  const res = await fetch("https://openapi.programming-hero.com/api/categories");
+  const data = await res.json();
+  hideSpinner();
+  displayCategories(data.categories);
 }
 
-// 🌴 Load Categories
-async function loadCategories() {
-  toggleSpinner(true);
-  const res = await fetch(categoriesUrl);
-  const data = await res.json();
-  const categories = data.categories;
-
-  categoriesContainer.innerHTML = "";
+// Display Categories
+function displayCategories(categories) {
+  categoriesDiv.innerHTML = "";
   categories.forEach(cat => {
     const btn = document.createElement("button");
-    btn.className =
-      "px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600";
     btn.innerText = cat.category;
-    btn.onclick = () => {
-      document
-        .querySelectorAll("#categories button")
-        .forEach(b => b.classList.remove("bg-green-700"));
-      btn.classList.add("bg-green-700");
-      loadTreesByCategory(cat.id);
-    };
-    categoriesContainer.appendChild(btn);
+    btn.className = "category-btn bg-green-200 px-4 py-2 rounded hover:bg-green-300";
+    btn.onclick = () => loadTreesByCategory(cat.id, btn);
+    categoriesDiv.appendChild(btn);
   });
-
-  toggleSpinner(false);
 }
 
-// 🌴 Load All Plants
-async function loadAllTrees() {
-  toggleSpinner(true);
-  const res = await fetch(plantsUrl);
+// Load Trees
+async function loadTrees() {
+  showSpinner();
+  const res = await fetch("https://openapi.programming-hero.com/api/plants");
   const data = await res.json();
+  hideSpinner();
   displayTrees(data.plants);
-  toggleSpinner(false);
 }
 
-// 🌴 Load Plants by Category
-async function loadTreesByCategory(categoryId) {
-  toggleSpinner(true);
-  const res = await fetch(plantsByCategoryUrl + categoryId);
+// Load Trees by Category
+async function loadTreesByCategory(id, btn) {
+  document.querySelectorAll(".category-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+
+  showSpinner();
+  const res = await fetch(`https://openapi.programming-hero.com/api/category/${id}`);
   const data = await res.json();
-  displayTrees(data.plants);
-  toggleSpinner(false);
+  hideSpinner();
+  displayTrees(data.data);
 }
 
-// 🌴 Display Trees
+// Display Trees
 function displayTrees(trees) {
-  treesContainer.innerHTML = "";
-
-  if (!trees || trees.length === 0) {
-    treesContainer.innerHTML =
-      "<p class='col-span-3 text-center text-gray-500'>No plants found in this category</p>";
-    return;
-  }
-
+  treesDiv.innerHTML = "";
   trees.forEach(tree => {
-    const div = document.createElement("div");
-    div.className = "bg-white rounded shadow p-4 flex flex-col";
-    div.innerHTML = `
-      <img src="${tree.image}" alt="${tree.name}" class="rounded mb-2 h-32 w-full object-cover">
-      <h3 onclick="showPlantDetail(${tree.id})" class="font-bold text-lg cursor-pointer text-green-700 hover:underline">${tree.name}</h3>
-      <p class="text-gray-600 text-sm mb-2">${tree.description.slice(0, 60)}...</p>
-      <p class="text-gray-800 font-semibold">Price: ${tree.price}৳</p>
-      <button onclick="addToCart(${tree.id}, '${tree.name}', ${tree.price})" class="mt-auto bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Add to Cart</button>
+    const card = document.createElement("div");
+    card.className = "bg-white shadow rounded p-4 text-center";
+    card.innerHTML = `
+      <img src="${tree.image}" alt="${tree.name}" class="w-full h-40 object-cover rounded mb-2">
+      <h3 class="font-bold cursor-pointer hover:text-green-600" onclick="loadTreeDetails(${tree.id})">${tree.name}</h3>
+      <p class="text-gray-600 text-sm">${tree.category}</p>
+      <p class="font-semibold">${tree.price}৳</p>
+      <button class="mt-2 bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700"
+        onclick="addToCart('${tree.name}', ${tree.price})">
+        Add to Cart
+      </button>
     `;
-    treesContainer.appendChild(div);
+    treesDiv.appendChild(card);
   });
 }
 
-// 🌴 Plant Details (Modal)
-async function showPlantDetail(id) {
-  const res = await fetch(plantDetailUrl + id);
+// Load Tree Details (Modal)
+async function loadTreeDetails(id) {
+  showSpinner();
+  const res = await fetch(`https://openapi.programming-hero.com/api/plant/${id}`);
   const data = await res.json();
-  const plant = data.plant;
-
-  const modal = document.createElement("div");
-  modal.className =
-    "fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50";
-  modal.innerHTML = `
-    <div class="bg-white p-6 rounded shadow max-w-md w-full relative">
-      <button onclick="this.parentElement.parentElement.remove()" class="absolute top-2 right-2 text-red-500 text-xl">✖</button>
-      <img src="${plant.image}" alt="${plant.name}" class="rounded mb-2 h-40 w-full object-cover">
-      <h2 class="font-bold text-xl mb-2">${plant.name}</h2>
-      <p class="text-gray-600 mb-2">${plant.description}</p>
-      <p class="font-semibold">Category: ${plant.category}</p>
-      <p class="font-semibold">Price: ${plant.price}৳</p>
-    </div>
-  `;
-  document.body.appendChild(modal);
+  hideSpinner();
+  alert(`${data.name}\n\n${data.description}`);
 }
 
-// 🌴 Add to Cart
-function addToCart(id, name, price) {
-  cart.push({ id, name, price });
-  totalPrice += price;
-  renderCart();
+// Add to Cart
+function addToCart(name, price) {
+  cart.push({ name, price });
+  total += price;
+  updateCart();
 }
 
-// 🌴 Remove from Cart
+// Remove from Cart
 function removeFromCart(index) {
-  totalPrice -= cart[index].price;
+  total -= cart[index].price;
   cart.splice(index, 1);
-  renderCart();
+  updateCart();
 }
 
-// 🌴 Render Cart
-function renderCart() {
-  cartContainer.innerHTML = "";
+// Update Cart
+function updateCart() {
+  cartList.innerHTML = "";
   cart.forEach((item, index) => {
     const li = document.createElement("li");
-    li.className =
-      "flex justify-between items-center bg-gray-100 px-3 py-2 rounded mb-2";
+    li.className = "flex justify-between items-center bg-white px-3 py-2 rounded shadow";
     li.innerHTML = `
-      <span>${item.name}</span>
-      <div class="flex items-center space-x-2">
-        <span>${item.price}৳</span>
-        <button onclick="removeFromCart(${index})" class="text-red-500 font-bold">❌</button>
-      </div>
+      <span>${item.name} - ${item.price}৳</span>
+      <button class="text-red-500" onclick="removeFromCart(${index})">❌</button>
     `;
-    cartContainer.appendChild(li);
+    cartList.appendChild(li);
   });
-
-  totalPriceEl.innerText = totalPrice + "৳";
+  totalPriceEl.textContent = total + "৳";
 }
 
-// Initial Load
+// Init
 loadCategories();
-loadAllTrees();
+loadTrees();
