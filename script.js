@@ -219,7 +219,7 @@ async function loadTreeDetails(treeId) {
 
   try {
     // Fetch tree details from the API
-    const res = await fetch(`https://openapi.programming-hero.com/api/plant/${treeId}`);
+    const res = await fetch(`https://openapi.programming-hero.com/api/plant/1${treeId}`);
     const tree = await res.json();
 
     // Populate modal with tree details
