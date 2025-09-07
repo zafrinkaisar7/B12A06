@@ -5,12 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Green Earth</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    /* Active Category Button */
+    .category-btn.active {
+      background-color: #facc15;
+      color: #000;
+      font-weight: bold;
+    }
+
+    /* Spinner */
+    #spinner .animate-spin {
+      border-top-color: transparent;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      padding: 100px 20px;
+      background-color: #bbf7d0; /* Tailwind green-200 */
+    }
+
+    /* Hero Leaves */
+    .hero-leaf-left,
+    .hero-leaf-right {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 220px;
+      height: auto;
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    .hero-leaf-left {
+      left: -60px;
+      transform: translateY(-50%) rotate(-12deg);
+    }
+
+    .hero-leaf-right {
+      right: -60px;
+      transform: translateY(-50%) rotate(12deg);
+    }
+
+    /* Hero Content */
+    .hero-content h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #064e3b;
+    }
+
+    .hero-content p {
+      margin-top: 10px;
+      font-size: 1.1rem;
+      color: #374151;
+    }
+
+    .hero-content button {
+      margin-top: 20px;
+      background: #facc15;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .hero-content button:hover {
+      background: #eab308;
+    }
+  </style>
 </head>
 <body class="bg-[#166534]">
 
   <!-- Navbar -->
-<nav class="bg-green-800 text-white flex justify-between items-center px-6 py-3">
+  <nav class="bg-green-800 text-white flex justify-between items-center px-6 py-3">
     <div class="font-bold text-lg">Green Earth</div>
     <ul class="hidden md:flex space-x-6">
       <li><a href="#about" class="hover:text-yellow-300">About</a></li>
@@ -21,24 +94,21 @@
   </nav>
 
   <!-- Hero Banner with Leaves -->
-  <section class="bg-green-200 text-center py-20 relative overflow-hidden">
+  <section class="hero-section">
     <!-- Left Leaf -->
-    <img src="assets/hero-leaf1.png" alt="Leaf Left"
-         class="absolute hero-leaf-left opacity-80" />
-    
+    <img src="assets/hero-leaf1.png" alt="Leaf Left" class="hero-leaf-left" />
+
+    <!-- Content -->
     <div class="hero-content relative inline-block">
-      <!-- Heading -->
       <h1 class="text-4xl md:text-5xl font-bold">Plant a Tree, Grow a Future</h1>
       <p class="text-gray-700 mt-2 max-w-xl mx-auto">
         Join our mission to protect nature and build a greener future.
       </p>
-      <!-- Button -->
-      <button class="mt-6 bg-yellow-400 px-6 py-2 rounded hover:bg-yellow-500">Get Started</button>
+      <button>Get Started</button>
     </div>
 
     <!-- Right Leaf -->
-    <img src="assets/hero-leaf2.png" alt="Leaf Right"
-         class="absolute hero-leaf-right opacity-80" />
+    <img src="assets/hero-leaf2.png" alt="Leaf Right" class="hero-leaf-right" />
   </section>
 
   <!-- Categories + Trees + Cart -->
@@ -46,7 +116,12 @@
     <!-- Categories -->
     <div>
       <h2 class="font-bold mb-4">Categories</h2>
-      <div id="categories" class="flex flex-col space-y-2"></div>
+      <div id="categories" class="flex flex-col space-y-2">
+        <button class="category-btn">All Trees</button>
+        <button class="category-btn">Fruit Trees</button>
+        <button class="category-btn">Flowering Trees</button>
+        <button class="category-btn">Shade Trees</button>
+      </div>
     </div>
 
     <!-- Trees -->
@@ -55,7 +130,7 @@
       <div id="trees" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
 
-    <!-- Cart Section (Right side) -->
+    <!-- Cart Section -->
     <div>
       <h2 class="font-bold text-xl mb-4">🛒 Cart</h2>
       <ul id="cart" class="space-y-2"></ul>
@@ -64,7 +139,7 @@
   </section>
 
   <!-- About Campaign -->
-  <section id="about" class="bg-green-100 px-6 py-16 bg-white flex flex-col md:flex-row items-center gap-10">
+  <section id="about" class="px-6 py-16 bg-white flex flex-col md:flex-row items-center gap-10">
     <div class="md:w-1/2">
       <img src="assets/about.png" alt="Tree" class="w-full rounded shadow-lg">
     </div>
@@ -100,20 +175,20 @@
     </div>
   </section>
 
-  <!-- Plant a Tree Form in Card -->
-<section id="plant" class="bg-green-700 px-6 py-16 flex justify-center">
-  <div class="bg-green-500 text-white rounded-lg shadow-lg p-8 w-full max-w-md">
-    <h2 class="font-bold text-2xl mb-6 text-center">🌱 Plant a Tree Today</h2>
-    <form class="space-y-4">
-      <input type="text" placeholder="Your Name" class="w-full p-2 rounded text-black">
-      <input type="email" placeholder="Your Email Address" class="w-full p-2 rounded text-black">
-      <input type="number" placeholder="Number of Trees" class="w-full p-2 rounded text-black">
-      <button type="submit" class="w-full bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500">
-        Donate Now
-      </button>
-    </form>
-  </div>
-</section>
+  <!-- Plant a Tree Form -->
+  <section id="plant" class="bg-green-700 px-6 py-16 flex justify-center">
+    <div class="bg-green-500 text-white rounded-lg shadow-lg p-8 w-full max-w-md">
+      <h2 class="font-bold text-2xl mb-6 text-center">🌱 Plant a Tree Today</h2>
+      <form class="space-y-4">
+        <input type="text" placeholder="Your Name" class="w-full p-2 rounded text-black">
+        <input type="email" placeholder="Your Email Address" class="w-full p-2 rounded text-black">
+        <input type="number" placeholder="Number of Trees" class="w-full p-2 rounded text-black">
+        <button type="submit" class="w-full bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500">
+          Donate Now
+        </button>
+      </form>
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer class="bg-green-900 text-white text-center py-4">

@@ -2,24 +2,118 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* Active Category Button */
+/* Category Buttons */
+.category-btn {
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+.category-btn:hover {
+  background: #dcfce7;
+}
 .category-btn.active {
-  background-color: #facc15;
-  color: #000;
+  background: #16a34a; /* Green background for active button */
+  color: white;
   font-weight: bold;
 }
 
-/* Spinner */
-#spinner .animate-spin {
-  border-top-color: transparent;
+/* Tree Card */
+.tree-card {
+  background: white;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+.tree-card:hover {
+  transform: translateY(-5px);
 }
 
-/* Hero Leaf Images */
+/* Modal */
+#treeModal {
+  z-index: 50;
+}
+#treeModal .absolute {
+  z-index: 60;
+}
+
+/* Cart */
+.cart-box {
+  background: white; /* White background for the cart card */
+  padding: 16px;
+  border-radius: 10px; /* Slight border radius */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for the card */
+}
+
+/* Cart Items */
+.cart-box ul li {
+  background: #bbf7d0; /* Green background for cart items */
+  padding: 8px 12px;
+  border-radius: 6px; /* Slight border radius */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Remove Button */
+.cart-box ul li button {
+  background: #dc2626; /* Red background for remove button */
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cart-box ul li button:hover {
+  background: #b91c1c; /* Darker red on hover */
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 100px 20px;
+  background: url('assets/banner.jpg') no-repeat center center/cover;
+}
 .hero-leaf-left,
 .hero-leaf-right {
-  max-width: 180px;
-  height: auto;
+  position: absolute;
+  top: 50%;
+  width: 200px;
+  opacity: 0.8;
 }
 .hero-leaf-left {
-  margin-right: 10px;
+  left: -60px;
+  transform: translateY(-50%) rotate(-12deg);
 }
+.hero-leaf-right {
+  right: -60px;
+  transform: translateY(-50%) rotate(12deg);
+}
+.hero-content h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #064e3b;
+}
+.hero-content p {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: #374151;
+}
+.hero-content button {
+  margin-top: 20px;
+  background: #facc15;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.hero-content button:hover {
+  background: #eab308;
+}
+
+
