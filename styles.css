@@ -13,107 +13,106 @@ body {
   background: #dcfce7;
 }
 .category-btn.active {
-  background: #16a34a; /* Green background for active button */
+  background: #85d5a2;
   color: white;
   font-weight: bold;
 }
 
-/* Tree Card */
+/* Tree Cards */
 .tree-card {
   background: white;
   border-radius: 10px;
   padding: 14px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensure consistent spacing */
+  height: 100%; /* Ensure all cards have the same height */
+  min-height: 350px; /* Set a slightly larger minimum height for all cards */
+  max-height: 350px; /* Prevent cards from growing too large */
 }
 .tree-card:hover {
   transform: translateY(-5px);
 }
 
-/* Modal */
-#treeModal {
-  z-index: 50;
+/* Tree Card Image */
+.tree-card img {
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
 }
-#treeModal .absolute {
-  z-index: 60;
+
+/* Tree Card Title (Tree Name) */
+.tree-card h3 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+  text-align: center;
+  min-height: 40px; /* Ensure consistent height for tree names */
+}
+
+/* Tree Card Description */
+.tree-card p {
+  font-size: 0.875rem;
+  color: #6b7280; /* Tailwind gray-500 */
+  text-align: center;
+  margin: 0.25rem 0;
+  min-height: 40px; /* Ensure consistent height for descriptions */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+}
+
+/* Add to Cart Button */
+.add-btn {
+  margin-top: auto; /* Push the button to the bottom */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 9999px; /* Fully rounded corners */
+  padding: 0.5rem 1rem;
+  background: #16a34a;
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  height: 45px; /* Fixed height for all buttons */
+  width: 100%; /* Make the button stretch to the card width */
+  max-width: 200px; /* Limit the button width */
+  line-height: 45px; /* Vertically center the text */
+  text-align: center;
+}
+.add-btn:hover {
+  background: #15803d; /* Darker green on hover */
 }
 
 /* Cart */
 .cart-box {
-  background: white; /* White background for the cart card */
+  background: white;
   padding: 16px;
-  border-radius: 10px; /* Slight border radius */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for the card */
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Cart Items */
-.cart-box ul li {
-  background: #bbf7d0; /* Green background for cart items */
-  padding: 8px 12px;
-  border-radius: 6px; /* Slight border radius */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Remove Button */
-.cart-box ul li button {
-  background: #dc2626; /* Red background for remove button */
-  color: white;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.cart-box ul li button:hover {
-  background: #b91c1c; /* Darker red on hover */
-}
-
-/* Hero Section */
+/* Hero */
 .hero-section {
   position: relative;
-  overflow: hidden;
-  text-align: center;
   padding: 100px 20px;
   background: url('assets/banner.jpg') no-repeat center center/cover;
-}
-.hero-leaf-left,
-.hero-leaf-right {
-  position: absolute;
-  top: 50%;
-  width: 200px;
-  opacity: 0.8;
-}
-.hero-leaf-left {
-  left: -60px;
-  transform: translateY(-50%) rotate(-12deg);
-}
-.hero-leaf-right {
-  right: -60px;
-  transform: translateY(-50%) rotate(12deg);
-}
-.hero-content h1 {
-  font-size: 2.5rem;
-  font-weight: bold;
   color: #064e3b;
 }
-.hero-content p {
-  margin-top: 10px;
-  font-size: 1.1rem;
-  color: #374151;
-}
+.hero-content h1 { font-size: 2.5rem; font-weight: bold; }
+.hero-content p { margin-top: 10px; font-size: 1.1rem; }
 .hero-content button {
   margin-top: 20px;
   background: #facc15;
   padding: 10px 24px;
   border-radius: 8px;
   font-weight: 600;
-  transition: 0.3s;
 }
 .hero-content button:hover {
   background: #eab308;
+  cursor: pointer;
 }
-
-

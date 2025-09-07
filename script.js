@@ -124,30 +124,58 @@ async function loadTreesByCategory(id) {
   }
 }
 
+// Ensure all tree cards have the same height
+function equalizeCardHeights() {
+  const cards = document.querySelectorAll(".tree-card");
+  let maxHeight = 0;
+
+  // Reset heights to calculate the tallest card
+  cards.forEach(card => {
+    card.style.height = "auto";
+    maxHeight = Math.max(maxHeight, card.offsetHeight);
+  });
+
+  // Set all cards to the tallest height
+  cards.forEach(card => {
+    card.style.height = maxHeight + "px";
+  });
+}
+
+// Truncate descriptions dynamically
+function truncateDescription(description, maxLength = 50) {
+  return description.length > maxLength
+    ? description.substring(0, maxLength) + "..."
+    : description;
+}
+
 // Display Trees
 function displayTrees(trees) {
-  treesDiv.innerHTML = "";
+  treesDiv.innerHTML = ""; // Clear previous trees
   if (!trees.length) {
-    treesDiv.innerHTML = `<p class="text-center text-gray-500">No trees available</p>`;
+    treesDiv.innerHTML = "<p class='text-center text-gray-500'>No trees found for this category.</p>";
     return;
   }
 
   trees.forEach(tree => {
     const card = document.createElement("div");
-    card.className = "bg-white shadow rounded p-4 text-center";
+    card.className = "tree-card bg-white rounded shadow p-4";
+
     card.innerHTML = `
-      <img src="${tree.image || "https://via.placeholder.com/150"}" alt="${tree.name}" 
-           class="w-full h-32 object-cover rounded mb-2">
-      <h3 class="font-bold">${tree.name || "Unnamed"}</h3>
-      <p class="text-gray-600">${tree.category || "Unknown"}</p>
-      <p class="font-semibold">${tree.price ? tree.price + "৳" : "Price N/A"}</p>
-      <button class="mt-2 bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700"
-        onclick="addToCart('${tree.name}', ${tree.price || 0})">
+      <img src="${tree.image}" alt="${tree.name}" class="w-full h-40 object-cover rounded mb-2">
+      <h3 class="font-bold text-lg cursor-pointer hover:text-green-600" onclick="loadTreeDetails(${tree.id})">${tree.name}</h3>
+      <p class="text-gray-600 text-sm mt-2">${truncateDescription(tree.description || "No description available.")}</p>
+      <p class="text-gray-500 text-xs mt-1">Category: ${tree.category}</p>
+      <p class="font-semibold mt-2">${tree.price}৳</p>
+      <button class="add-btn bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mt-2" onclick="addToCart('${tree.name}', ${tree.price})">
         Add to Cart
       </button>
     `;
+
     treesDiv.appendChild(card);
   });
+
+  // Equalize card heights after rendering
+  equalizeCardHeights();
 }
 
 // Add to Cart
